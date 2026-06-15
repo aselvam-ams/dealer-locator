@@ -25,6 +25,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        # Browser Google Maps key, baked into the web bundle at build time.
+        # Blank => the free OpenStreetMap map is used. Public by design.
+        VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY:-}
     environment:
       DATABASE_URL: postgres://dealer:${POSTGRES_PASSWORD:-dealer}@db:5432/dealer_locator
       PORT: "4000"
