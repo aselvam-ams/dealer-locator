@@ -1,0 +1,19 @@
+# Normalise line endings in the repository to LF.
+* text=auto
+
+# Shell scripts MUST stay LF even when checked out on Windows, or the
+# container entrypoint shebang (#!/bin/sh) breaks inside Linux images.
+*.sh text eol=lf
+
+# Windows batch files stay CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Treat these as binary (no EOL conversion, no diff).
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.xlsx binary
+*.pdf binary

@@ -1,0 +1,46 @@
+# Full-stack deployment: the app image (API + web) plus its PostGIS database.
+# Usage:
+#   docker compose -f docker-compose.prod.yml up --build
+# Then open http://localhost:4000
+#
+# SEED_ON_START seeds demo data on first boot — set to "false" once you have
+# real data, or for a production deployment.
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    environment:
+      POSTGRES_USER: dealer
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dealer}
+      POSTGRES_DB: dealer_locator
+    volumes:
+      - dealer_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dealer -d dealer_locator"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgres://dealer:${POSTGRES_PASSWORD:-dealer}@db:5432/dealer_locator
+      PORT: "4000"
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:4000}
+      FRAME_ANCESTORS: ${FRAME_ANCESTORS:-}
+      SEED_ON_START: ${SEED_ON_START:-true}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
+    ports:
+      - "4000:4000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - dealer_sftp_out:/app/sftp-out
+
+volumes:
+  dealer_pg_data:
+  dealer_sftp_out:

@@ -1,0 +1,24 @@
+{
+  "name": "dealer-locator-2025",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BR-033 Dealer Locator 2025 — multitenant dealer locator MVP (AMS)",
+  "workspaces": [
+    "shared",
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "migrate": "npm run migrate -w server",
+    "seed": "npm run seed -w server",
+    "dev:server": "npm run dev -w server",
+    "dev:web": "npm run dev -w web",
+    "build": "npm run build -w shared && npm run build -w server && npm run build -w web",
+    "test": "npm run test -w server"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,118 @@
+:root {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --panel-2: #273449;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #38bdf8;
+  --green: #22c55e;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --border: #334155;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a { color: var(--accent); }
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+}
+.topnav .brand { font-weight: 700; color: #fff; }
+.topnav .spacer { flex: 1; }
+.topnav a { text-decoration: none; padding: 0.35rem 0.6rem; border-radius: 6px; }
+.topnav a.active { background: var(--panel-2); }
+.topnav .who { color: var(--muted); font-size: 0.85rem; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.25rem; }
+.embed .container { padding: 1rem; max-width: 100%; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  margin-bottom: 1rem;
+}
+
+label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.25rem; }
+input, select, textarea {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+.row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.row > div { flex: 1; min-width: 140px; }
+
+button {
+  background: var(--accent);
+  color: #06283d;
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+button.secondary { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); }
+button.danger { background: var(--red); color: #fff; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  margin: 0 0.25rem 0.25rem 0;
+  border: 1px solid var(--border);
+}
+.badge.stop { background: rgba(239,68,68,0.15); color: #fca5a5; border-color: #7f1d1d; }
+.badge.ev { background: rgba(34,197,94,0.15); color: #86efac; border-color: #14532d; }
+.badge.restrict { background: rgba(245,158,11,0.15); color: #fcd34d; border-color: #78350f; }
+.badge.cap { background: var(--panel-2); color: var(--text); }
+
+.result {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.8rem 0;
+}
+.result:last-child { border-bottom: none; }
+.result .rank { font-size: 1.4rem; font-weight: 700; color: var(--accent); width: 2rem; }
+.result .meta { color: var(--muted); font-size: 0.85rem; }
+.result .drive { text-align: right; white-space: nowrap; }
+.result .drive .big { font-size: 1.2rem; font-weight: 700; }
+
+.muted { color: var(--muted); }
+.error { color: #fca5a5; background: rgba(239,68,68,0.1); padding: 0.5rem 0.75rem; border-radius: 6px; }
+.ok { color: #86efac; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th, td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--border); }
+th { color: var(--muted); font-weight: 600; }
+.toggle-pill { display: inline-flex; gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.toggle-pill button { background: var(--panel-2); color: var(--text); border-radius: 0; }
+.toggle-pill button.on { background: var(--accent); color: #06283d; }
+.map-placeholder {
+  height: 200px; border-radius: 8px; border: 1px dashed var(--border);
+  display: flex; align-items: center; justify-content: center; color: var(--muted);
+  background: repeating-linear-gradient(45deg, #1e293b, #1e293b 12px, #223049 12px, #223049 24px);
+}
+.login-wrap { max-width: 380px; margin: 8vh auto; }
+.demo-accounts { font-size: 0.78rem; color: var(--muted); margin-top: 1rem; line-height: 1.6; }
+.demo-accounts code { color: var(--accent); cursor: pointer; }

@@ -1,0 +1,53 @@
+# Dealer Locator 2025 — Portainer stack (standalone Docker host)
+#
+# Deploy this as a Portainer "Stack". It runs the app (API + web) and its
+# PostGIS database together. The ${VARS} below appear in Portainer's
+# "Environment variables" editor — set the secrets there.
+#
+# Two ways to provide the app image (see PORTAINER.md):
+#   • Pre-built image  : build once on the host (docker build -t dealer-locator:latest .)
+#                        and keep the `image:` line as-is. Works with the Web editor.
+#   • Git repository    : uncomment the `build:` block so Portainer builds from the repo.
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dealer}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set a strong DB password in Portainer}
+      POSTGRES_DB: ${POSTGRES_DB:-dealer_locator}
+    volumes:
+      - dealer_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dealer} -d ${POSTGRES_DB:-dealer_locator}"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  app:
+    image: ${APP_IMAGE:-dealer-locator:latest}
+    # --- Git-repository stack only: uncomment to have Portainer build the image ---
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-dealer}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-dealer_locator}
+      PORT: "4000"
+      JWT_SECRET: ${JWT_SECRET:?set a strong JWT secret in Portainer}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-}
+      FRAME_ANCESTORS: ${FRAME_ANCESTORS:-}
+      SEED_ON_START: ${SEED_ON_START:-true}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
+    ports:
+      - "${APP_PORT:-4000}:4000"
+    volumes:
+      - dealer_sftp_out:/app/sftp-out
+
+volumes:
+  dealer_pg_data:
+  dealer_sftp_out:
