@@ -202,9 +202,17 @@ export interface ChargingStation {
 // ---------------------------------------------------------------------------
 export type HighVoltageFault = 'yes' | 'no' | 'unknown';
 
+/**
+ * Where the tow should go:
+ *  - 'dealer'   → nearest eligible dealers (default).
+ *  - 'charging' → nearest EV charging stations only, for a charge-only tow
+ *                 (the vehicle just needs a charge, not a workshop).
+ */
+export type SearchDestination = 'dealer' | 'charging';
+
 export interface SearchRequest {
   tenant_id: string;
-  /** Incident coordinates, or use postcode below. */
+  /** Incident coordinates (drag-and-drop pin / manual lat-long), or use postcode below. */
   latitude?: number;
   longitude?: number;
   /** Postcode search away from the incident (FR-8a). */
@@ -216,6 +224,14 @@ export interface SearchRequest {
   exclude_sales_only?: boolean;
   /** When true, apply tow-acceptance filters (open now + not stop-towed). */
   tow_context?: boolean;
+  /** Tow destination type; defaults to 'dealer'. */
+  destination?: SearchDestination;
+}
+
+export interface ChargingResult extends ChargingStation {
+  distance_km: number;
+  /** Present when ranked as a charge-only tow destination. */
+  drive_time_minutes?: number;
 }
 
 export interface SearchResultItem {
@@ -239,8 +255,9 @@ export interface SearchResultItem {
 
 export interface SearchResponse {
   incident: { latitude: number; longitude: number };
+  destination: SearchDestination;
   results: SearchResultItem[];
-  charging_stations: Array<ChargingStation & { distance_km: number }>;
+  charging_stations: ChargingResult[];
 }
 
 // ---------------------------------------------------------------------------

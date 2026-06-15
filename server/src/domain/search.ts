@@ -5,6 +5,7 @@ import type {
   SearchResultItem,
   ServiceCapability,
   ChargingStation,
+  ChargingResult,
 } from '@dealer/shared';
 import type { ProvenanceField, OpeningHours } from '@dealer/shared';
 import { pool } from '../db/pool.js';
@@ -42,6 +43,15 @@ interface CandidateRow {
  */
 export async function proximitySearch(req: SearchRequest, now: Date = new Date()): Promise<SearchResponse> {
   const incident = await resolveIncident(req);
+  const destination = req.destination ?? 'dealer';
+
+  // Charge-only tow: the vehicle just needs a charger, not a workshop. Rank the
+  // nearest EV charging stations by drive time instead of searching dealers.
+  if (destination === 'charging') {
+    const charging = await rankedChargingStations(incident, RESULT_LIMIT);
+    return { incident, destination, results: [], charging_stations: charging };
+  }
+
   const towContext = req.tow_context ?? true;
 
   // --- Stage 1: PostGIS candidate selection -------------------------------
@@ -115,7 +125,30 @@ export async function proximitySearch(req: SearchRequest, now: Date = new Date()
 
   const charging = await nearestChargingStations(incident, 5);
 
-  return { incident, results: items, charging_stations: charging };
+  return { incident, destination, results: items, charging_stations: charging };
+}
+
+/**
+ * Nearest charging stations ranked by drive time (charge-only tow destination).
+ * Uses the same routing provider as dealer ranking so the numbers are comparable.
+ */
+async function rankedChargingStations(
+  incident: { latitude: number; longitude: number },
+  limit: number,
+): Promise<ChargingResult[]> {
+  const stations = await nearestChargingStations(incident, limit);
+  const routing = makeRoutingProvider();
+  const drive = await routing.getDriveTimes(
+    incident,
+    stations.map((s) => ({ latitude: s.latitude, longitude: s.longitude })),
+  );
+  return stations
+    .map((s, i) => ({
+      ...s,
+      distance_km: drive[i].distance_km,
+      drive_time_minutes: drive[i].drive_time_minutes,
+    }))
+    .sort((a, b) => a.drive_time_minutes - b.drive_time_minutes);
 }
 
 async function loadActiveRestrictions(

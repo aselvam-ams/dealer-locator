@@ -17,6 +17,7 @@ const searchSchema = z.object({
   location_type_id: z.string().uuid().optional(),
   exclude_sales_only: z.boolean().optional(),
   tow_context: z.boolean().optional(),
+  destination: z.enum(['dealer', 'charging']).optional(),
 });
 
 export async function searchRoutes(app: FastifyInstance) {
