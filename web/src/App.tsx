@@ -5,6 +5,10 @@ import { Search } from './pages/Search';
 import { DealerManagement } from './pages/DealerManagement';
 import { ImportExport } from './pages/ImportExport';
 import { EmbedSearch } from './pages/EmbedSearch';
+import { UserManagement } from './pages/UserManagement';
+import { TenantManagement } from './pages/TenantManagement';
+import { AuditLog } from './pages/AuditLog';
+import { DataSync } from './pages/DataSync';
 
 export function App() {
   const { user, loading, logout } = useAuth();
@@ -49,6 +53,26 @@ export function App() {
             Import / Export
           </NavLink>
         )}
+        {can(user.role, 'manage_users') && (
+          <NavLink to="/admin/users" className={({ isActive }) => (isActive ? 'active' : '')}>
+            Users
+          </NavLink>
+        )}
+        {can(user.role, 'manage_tenants') && (
+          <NavLink to="/admin/tenants" className={({ isActive }) => (isActive ? 'active' : '')}>
+            Tenants
+          </NavLink>
+        )}
+        {can(user.role, 'sync_charging') && (
+          <NavLink to="/admin/sync" className={({ isActive }) => (isActive ? 'active' : '')}>
+            Data Sync
+          </NavLink>
+        )}
+        {can(user.role, 'view_audit') && (
+          <NavLink to="/admin/audit" className={({ isActive }) => (isActive ? 'active' : '')}>
+            Audit Log
+          </NavLink>
+        )}
         <span className="spacer" />
         <span className="who">
           {user.email} · {user.role}
@@ -62,6 +86,10 @@ export function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/manage" element={<DealerManagement />} />
           <Route path="/import-export" element={<ImportExport />} />
+          <Route path="/admin/users" element={<UserManagement />} />
+          <Route path="/admin/tenants" element={<TenantManagement />} />
+          <Route path="/admin/sync" element={<DataSync />} />
+          <Route path="/admin/audit" element={<AuditLog />} />
           <Route path="*" element={<Navigate to="/search" replace />} />
         </Routes>
       </div>

@@ -84,6 +84,36 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ tenant_id: tenantId, club }),
     }),
+  // --- Admin: users ---
+  users: () => request<any[]>('/api/users'),
+  createUser: (body: unknown) =>
+    request<any>('/api/users', { method: 'POST', body: JSON.stringify(body) }),
+  updateUser: (id: string, body: unknown) =>
+    request<any>(`/api/users/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+
+  // --- Admin: tenants ---
+  adminTenants: () => request<any[]>('/api/admin/tenants'),
+  createTenant: (body: unknown) =>
+    request<any>('/api/admin/tenants', { method: 'POST', body: JSON.stringify(body) }),
+  updateTenant: (id: string, body: unknown) =>
+    request<any>(`/api/admin/tenants/${id}`, { method: 'PATCH', body: JSON.stringify(body) }),
+
+  // --- Admin: audit log ---
+  journal: (params: Record<string, string>) => {
+    const qs = new URLSearchParams(params).toString();
+    return request<any[]>(`/api/admin/journal${qs ? `?${qs}` : ''}`);
+  },
+
+  // --- Admin: data sync ---
+  chargingStations: () => request<any[]>('/api/admin/charging'),
+  syncCharging: () => request<{ upserted: number }>('/api/admin/charging/sync', { method: 'POST' }),
+  oemIngest: (body: unknown) =>
+    request<{ processed: number; created: number; updated: number }>('/api/oem/ingest', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    }),
+  changeRegisterRuns: () => request<any[]>('/api/admin/change-register/runs'),
+
   exportExcel: async (tenantId: string): Promise<Blob> => {
     const token = getToken();
     const res = await fetch(`${BASE}/api/tenants/${tenantId}/export`, {

@@ -57,6 +57,10 @@ const CAP: Record<string, string[]> = {
   import_export: ['admin', 'ams_power_user', 'oem_office'],
   set_stop_tow: ['admin', 'ams_power_user', 'oem_office', 'dealer'],
   change_register: ['admin', 'ams_power_user'],
+  manage_users: ['admin', 'ams_power_user', 'oem_office'],
+  manage_tenants: ['admin'],
+  view_audit: ['admin', 'ams_power_user'],
+  sync_charging: ['admin', 'ams_power_user'],
 };
 
 export function can(role: string | undefined, cap: keyof typeof CAP): boolean {

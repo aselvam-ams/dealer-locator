@@ -11,6 +11,8 @@ import { stopTowRoutes } from './routes/stopTow.js';
 import { importExportRoutes } from './routes/importExport.js';
 import { changeRegisterRoutes } from './routes/changeRegister.js';
 import { oemIngestRoutes } from './routes/oemIngest.js';
+import { userRoutes } from './routes/users.js';
+import { adminRoutes } from './routes/admin.js';
 
 export async function buildApp() {
   const app = Fastify({
@@ -50,6 +52,8 @@ export async function buildApp() {
   await app.register(importExportRoutes);
   await app.register(changeRegisterRoutes);
   await app.register(oemIngestRoutes);
+  await app.register(userRoutes);
+  await app.register(adminRoutes);
 
   // Single-image deploy: serve the built React app and SPA-fallback to
   // index.html for client-side routes (anything that isn't an API path).

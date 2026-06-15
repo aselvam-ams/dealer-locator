@@ -11,17 +11,20 @@ export type Capability =
   | 'oem_ingest'
   | 'change_register'
   | 'manage_users'
-  | 'manage_tenants';
+  | 'manage_tenants'
+  | 'view_audit'
+  | 'sync_charging';
 
 const MATRIX: Record<Role, Capability[]> = {
   admin: [
     'search', 'manage_own_location', 'manage_tenant_dealers', 'set_stop_tow',
     'lock_stop_tow', 'import_export', 'oem_ingest', 'change_register',
-    'manage_users', 'manage_tenants',
+    'manage_users', 'manage_tenants', 'view_audit', 'sync_charging',
   ],
   ams_power_user: [
     'search', 'manage_tenant_dealers', 'set_stop_tow', 'lock_stop_tow',
     'import_export', 'oem_ingest', 'change_register', 'manage_users',
+    'view_audit', 'sync_charging',
   ],
   consultant: ['search'],
   service_provider: ['search'],
