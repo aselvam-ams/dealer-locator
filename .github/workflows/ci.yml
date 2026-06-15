@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Type-check, test, build
+    runs-on: ubuntu-latest
+
+    # Real PostGIS so the search integration test runs in CI.
+    services:
+      db:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: dealer
+          POSTGRES_PASSWORD: dealer
+          POSTGRES_DB: dealer_locator
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U dealer -d dealer_locator"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 15
+
+    env:
+      DATABASE_URL: postgres://dealer:dealer@localhost:5433/dealer_locator
+      JWT_SECRET: ci-test-secret
+      RUN_DB_TESTS: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check server
+        run: npx tsc -p server/tsconfig.json --noEmit
+
+      - name: Type-check web
+        run: npx tsc -p web/tsconfig.json --noEmit
+
+      - name: Migrate and seed
+        run: |
+          npm run migrate -w server
+          npm run seed -w server
+
+      - name: Run tests (unit + PostGIS integration)
+        run: npm test -w server
+
+      - name: Build web app
+        run: npm run build -w web
+
+  docker:
+    name: Validate Docker image build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t dealer-locator:ci .

@@ -1,5 +1,7 @@
 # Dealer Locator 2025 (BR-033) — MVP
 
+[![CI](https://github.com/aselvam-ams/dealer-locator/actions/workflows/ci.yml/badge.svg)](https://github.com/aselvam-ams/dealer-locator/actions/workflows/ci.yml)
+
 A multitenant dealer-locator web app (AMS). Consultants, Clubs and Service
 Providers find the nearest dealer that can accept a tow *now*, with EV-certified
 routing and nearby charging stations.
