@@ -1,0 +1,35 @@
+{
+  "name": "Dealer Locator 2025",
+  // Base dev image + Docker (to run the stack) + Node (to run tests/npm).
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/node:1": { "version": "20" }
+  },
+
+  // The app serves API + web on the same port, so one forwarded port is enough.
+  "forwardPorts": [4000],
+  "portsAttributes": {
+    "4000": {
+      "label": "Dealer Locator",
+      "onAutoForward": "openPreview"
+    }
+  },
+
+  // Install deps once (lets you run `npm test -w server`, etc. in the terminal).
+  "postCreateCommand": "npm install",
+
+  // Build + start the full stack (app + PostGIS) every time the Codespace starts.
+  // SEED_ON_START=true (the compose default) loads demo data on first boot.
+  "postStartCommand": "docker compose -f docker-compose.prod.yml up -d --build",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
+  }
+}

@@ -1,6 +1,7 @@
 # Dealer Locator 2025 (BR-033) — MVP
 
 [![CI](https://github.com/aselvam-ams/dealer-locator/actions/workflows/ci.yml/badge.svg)](https://github.com/aselvam-ams/dealer-locator/actions/workflows/ci.yml)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/aselvam-ams/dealer-locator)
 
 A multitenant dealer-locator web app (AMS). Consultants, Clubs and Service
 Providers find the nearest dealer that can accept a tow *now*, with EV-certified
@@ -68,6 +69,26 @@ Open http://localhost:5173.
 - **Embed**: http://localhost:5173/embed renders the locator as Salesforce would
   embed it. The API sets `Content-Security-Policy: frame-ancestors` from
   `FRAME_ANCESTORS`.
+
+## Run it on GitHub (Codespaces)
+
+Click the **Open in GitHub Codespaces** badge above (or *Code → Codespaces → Create*).
+The devcontainer installs dependencies and runs `docker-compose.prod.yml`, building
+the app and starting PostGIS. When port **4000** is forwarded, open it — the full app
+(API + web) is live with seeded demo data. This is for testing/demos, not production.
+
+## Prebuilt image (GHCR)
+
+CI publishes the image to GitHub Container Registry on every push to `main`:
+
+```
+ghcr.io/aselvam-ams/dealer-locator:latest
+```
+
+Any host (Portainer, Railway, a VM) can pull this instead of building. For example,
+set `APP_IMAGE=ghcr.io/aselvam-ams/dealer-locator:latest` in the Portainer stack.
+(Make the package public in the repo's *Packages* settings, or log in with a token to
+pull a private image.)
 
 ## Docker (host it anywhere)
 
