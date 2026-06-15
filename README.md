@@ -138,7 +138,8 @@ targets the AMS Azure footprint (Section 6.2).
 | `ALLOWED_ORIGINS` | CORS allowlist (comma-separated) |
 | `FRAME_ANCESTORS` | Origins permitted to iframe `/embed` (Salesforce org) |
 | `SEED_ON_START` | `true` to seed demo data on boot |
-| `GOOGLE_MAPS_API_KEY` | Optional; mock routing used when unset |
+| `GOOGLE_MAPS_API_KEY` | Server-side Routes API key (real drive times); mock used when unset |
+| `VITE_GOOGLE_MAPS_API_KEY` | **Build-time** browser key for the Google Maps view; OpenStreetMap used when unset. Pass via `docker build --build-arg VITE_GOOGLE_MAPS_API_KEY=...` |
 
 ## Tests
 

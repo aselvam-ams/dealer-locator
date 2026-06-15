@@ -17,6 +17,10 @@ RUN npm install
 # Copy the rest of the source and build the web app for same-origin API calls.
 COPY . .
 ENV VITE_API_BASE=""
+# Optional browser Google Maps key (baked at build time; blank => OSM/Leaflet map).
+#   docker build --build-arg VITE_GOOGLE_MAPS_API_KEY=AIza... .
+ARG VITE_GOOGLE_MAPS_API_KEY=""
+ENV VITE_GOOGLE_MAPS_API_KEY=$VITE_GOOGLE_MAPS_API_KEY
 RUN npm run build -w web
 
 # ---- runtime stage --------------------------------------------------------
