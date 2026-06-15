@@ -31,6 +31,10 @@ services:
     # build:
     #   context: .
     #   dockerfile: Dockerfile
+    #   args:
+    #     # Optional browser Google Maps key (baked into the web bundle at build).
+    #     # Public by design — restrict it by HTTP referrer in Google Cloud.
+    #     VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY:-}
     restart: unless-stopped
     depends_on:
       db:
